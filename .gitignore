@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# runtime state of the containers
+clickhouse_data/
+metabase-data/
+clickhouse_jdbc/*.jar
+
+# files produced by the pipeline
+data/real_estate_*.xlsx
+data/combined_rentals.csv
+data/processed_rentals.csv

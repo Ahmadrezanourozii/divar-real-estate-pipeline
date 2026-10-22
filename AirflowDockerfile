@@ -1,0 +1,33 @@
+FROM registry.docker.ir/apache/airflow:2.10.4
+
+USER root
+# Install dependencies
+RUN apt-get update && apt-get install -y wget unzip libnss3 libgconf-2-4
+
+# Set Chrome version and Chromedriver version
+ARG CHROME_VERSION=114.0.5735.90
+ARG CHROMEDRIVER_VERSION=114.0.5735.90
+
+# Install Chrome (if not already installed)
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -f install -y
+
+# Install Chromedriver
+RUN wget -q https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip -d /usr/local/bin/ && \
+    chmod +x /usr/local/bin/chromedriver && \
+    rm chromedriver_linux64.zip
+
+
+USER airflow
+WORKDIR /code
+RUN chmod 777 /home/*
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy an entrypoint script to initialize the database and create the user
+COPY airflow_entrypoint.sh /entrypoint.sh
+
+USER root
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["webserver"]

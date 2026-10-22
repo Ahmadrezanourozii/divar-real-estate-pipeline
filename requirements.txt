@@ -1,0 +1,10 @@
+selenium
+apache-airflow==2.10.4
+webdriver-manager
+pandas
+clickhouse-sqlalchemy
+SQLAlchemy<2.0
+confluent_kafka
+openpyxl
+clickhouse_driver
+kafka-python-ng

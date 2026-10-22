@@ -6,12 +6,10 @@ classifieds site, streams them through Kafka into ClickHouse and makes them quer
 Everything runs with one `docker compose` command.
 
 ```
-              Airflow (every 30 min)
- ┌──────────────────────────────────────────────────────┐
- │  scrape  ──►  read & merge  ──►  clean  ──►  produce │──► Kafka ──► consumer ──► ClickHouse ──► Metabase
- │ (Selenium)    (3 cities)       (Persian    (one msg   │    topic                 MergeTree      dashboards
- │                                 numerals)   per ad)   │                          by city
- └──────────────────────────────────────────────────────┘
+Airflow (every 30 min):  scrape ─► merge 3 cities ─► clean ─► publish to Kafka
+                                                                 │
+                                                                 ▼
+                         Metabase ◄─ ClickHouse ◄─ consumer ◄─ Kafka
 ```
 
 ## Components
